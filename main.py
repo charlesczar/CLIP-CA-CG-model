@@ -10,6 +10,6 @@ if __name__ == "__main__":
     with open(BASE_DIR / "configs" / "config.yaml") as f:
         config = yaml.safe_load(f)
 
-    df = pd.read_csv(BASE_DIR / "data" / "reviews.csv")
+    df = pd.read_csv(BASE_DIR / "data" / "training.csv")
 
     train_main(df, config, BASE_DIR)
