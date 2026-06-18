@@ -7,3 +7,8 @@ outputs/checkpoints/*.pt
 
 # Ignore generated evaluation/inference predictions spreadsheet
 outputs/predictions.csv
+
+# Ignore image dataset folders (share separately via Drive/etc.)
+data/images/Negative/
+data/images/Neutral/
+data/images/positive/
