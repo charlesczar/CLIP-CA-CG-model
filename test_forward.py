@@ -11,7 +11,7 @@ from models.model import CLIPCACG
 # LOAD CSV (script-relative path)
 # -------------------------
 BASE_DIR = Path(__file__).resolve().parent
-df = pd.read_csv(BASE_DIR / "data" / "evaluate.csv")
+df = pd.read_csv(BASE_DIR / "data" / "test.csv")
 
 # -------------------------
 # TOKENIZER
