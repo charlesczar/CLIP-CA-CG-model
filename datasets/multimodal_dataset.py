@@ -19,10 +19,8 @@ class MultiModalDataset(Dataset):
 
         for img_name in image_list:
             # sanitize filename from CSV
-            img_name = str(img_name).strip()            # remove whitespace
-            img_name = img_name.strip('"').strip("'")   # remove quotes
-            img_name = Path(img_name).name              # drop any stray dirs
-            path = base / img_name
+            img_name = str(img_name).strip()
+            img_name = img_name.strip('"').strip("'")
             if img_name == "" or img_name.lower() in {"nan", "none"}:
                 continue
 

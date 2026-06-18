@@ -29,29 +29,26 @@ class CLIPCACG(nn.Module):
         t = self.text_encoder(input_ids, attention_mask)
         t = self.text_proj(t)
 
-       # ------------------
+        # ------------------
         # 2. IMAGE PROCESSING
         # ------------------
         B, N, C, H, W = images.shape
-        
+
         # Flatten and extract visual features
         i = self.image_encoder(images.view(B * N, C, H, W))
-        i = i.view(B, N, -1)  # Shape: (B, N, 2048)
-
-        # The dataloader now supplies a perfect binary mask matching the tensor layout
-        mask = image_mask.to(i.device)  # Shape: (B, N, 1)
-
-        # Apply mask and compute the true average
-        i = i * mask 
-        i = i.sum(dim=1) / mask.sum(dim=1).clamp(min=1)  # Shape: (B, 2048)
-        i = self.image_proj(i)
+        i = i.view(B, N, -1)       # (B, N, 2048)
+        i = self.image_proj(i)     # (B, N, 512) — project before attention
 
         # -----------------------
         # 3. CROSS ATTENTION & FUSION
         # -----------------------
-        # Note: If your CrossAttention layer expects images to retain their sequence 
-        # dimension (B, N, D), move this step BEFORE the `.sum(dim=1)` pooling above!
+        # Cross-attention operates on individual image tokens (B, N, 512)
         t, i = self.cross_attn(t, i)
+
+        # Pool image tokens AFTER cross-attention using the mask
+        mask = image_mask.to(i.device)  # (B, N, 1)
+        i = i * mask
+        i = i.sum(dim=1) / mask.sum(dim=1).clamp(min=1)  # (B, 512)
 
         # GATING & CLASSIFIER
         f = self.gate(t, i)
