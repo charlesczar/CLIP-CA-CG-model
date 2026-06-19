@@ -12,3 +12,5 @@ outputs/predictions.csv
 data/images/Negative/
 data/images/Neutral/
 data/images/positive/
+
+venv/
